@@ -10,9 +10,9 @@ on:
 env:
   tic80version: '1.0'
   tic80release: '2164'
-  scripttype: moon
-  scriptextension: moon
-  projectname: whitch
+  scripttype: lua
+  scriptextension: lua
+  projectname: 1-btn-jam-2024
   BUILD_TYPE: MinSizeRel
   butlerversion: 15.21.0
 
@@ -76,7 +76,6 @@ jobs:
             --fs . \
             --cmd "load ${projectname:?}.${scriptextension:?} & mkdir dist & cd dist & save ${projectname:?} & export html ${projectname:?}-html5 --alone=1" | tee tic.log          
           if [[ $(cat ./tic.log) == *"error"* ]]; then
-            cat tic.log
             exit 1
           fi
           
