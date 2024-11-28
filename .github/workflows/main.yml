@@ -74,7 +74,17 @@ jobs:
           tic80 \
             --cli \
             --fs . \
-            --cmd "load ${projectname:?}.${scriptextension:?} & mkdir dist & cd dist & save ${projectname:?} & export html ${projectname:?}-html5 --alone=1" | tee tic.log          
+            --cmd "load ${projectname:?}.${scriptextension:?} & mkdir dist & cd dist & save ${projectname:?}" | tee tic.log          
+          if [[ $(cat ./tic.log) == *"error"* ]]; then
+            exit 1
+          fi
+          
+      - name: Export cart to HTML with TIC-80
+        run: |
+          tic80 \
+            --cli \
+            --fs . \
+            --cmd "cd dist & load ${projectname:?} & export html ${projectname:?}-html5 --alone=1" | tee tic.log          
           if [[ $(cat ./tic.log) == *"error"* ]]; then
             exit 1
           fi
@@ -99,6 +109,7 @@ jobs:
           prerelease: true
           title: Development Build
           files: |
+            ./dist/${{ env.projectname }}.tic
             ./dist/${{ env.projectname }}-html5.zip
             
   release:         
@@ -128,6 +139,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           prerelease: false
           files: |
+            ./dist/${{ env.projectname }}.tic
             ./dist/${{ env.projectname }}-html5.zip
       
       - name: Download Butler
